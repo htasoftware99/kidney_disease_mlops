@@ -5,6 +5,7 @@ mkdir -p templates
 mkdir -p config
 mkdir -p utils
 mkdir -p pipeline
+mkdir -p static
 
 touch src/__init__.py
 touch src/logger.py

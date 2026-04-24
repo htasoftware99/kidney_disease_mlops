@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CKD Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="noise"></div>
+
+    <header>
+        <div class="header-inner">
+            <div class="logo">
+                <span class="logo-icon">⬡</span>
+                <span class="logo-text">HTAI</span>
+            </div>
+            <p class="header-sub">Chronic Kidney Disease Diagnostic System</p>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Patient<br><em>Diagnostic</em><br>Form</h1>
+            <p class="hero-desc">Enter the patient's clinical measurements below. All values should reflect processed and encoded lab results.</p>
+        </section>
+
+        <form method="POST" action="/" class="form-card">
+
+            <div class="form-section">
+                <h2 class="section-title"><span class="section-num">01</span> Basic Info</h2>
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" name="age" step="1" placeholder="e.g. 48" required>
+                    </div>
+                    <div class="field">
+                        <label for="blood_pressure">Blood Pressure</label>
+                        <input type="number" id="blood_pressure" name="blood_pressure" step="any" placeholder="e.g. 80" required>
+                    </div>
+                    <div class="field">
+                        <label for="specific_gravity">Specific Gravity</label>
+                        <input type="number" id="specific_gravity" name="specific_gravity" step="any" placeholder="e.g. 1.020" required>
+                    </div>
+                    <div class="field">
+                        <label for="albumin">Albumin</label>
+                        <input type="number" id="albumin" name="albumin" step="any" placeholder="e.g. 1" required>
+                    </div>
+                    <div class="field">
+                        <label for="sugar">Sugar</label>
+                        <input type="number" id="sugar" name="sugar" step="any" placeholder="e.g. 0" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title"><span class="section-num">02</span> Blood & Urine Tests</h2>
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="blood_glucose_random">Blood Glucose (Random)</label>
+                        <input type="number" id="blood_glucose_random" name="blood_glucose_random" step="any" placeholder="e.g. 121" required>
+                    </div>
+                    <div class="field">
+                        <label for="blood_urea">Blood Urea</label>
+                        <input type="number" id="blood_urea" name="blood_urea" step="any" placeholder="e.g. 36" required>
+                    </div>
+                    <div class="field">
+                        <label for="serum_creatinine">Serum Creatinine</label>
+                        <input type="number" id="serum_creatinine" name="serum_creatinine" step="any" placeholder="e.g. 1.2" required>
+                    </div>
+                    <div class="field">
+                        <label for="sodium">Sodium</label>
+                        <input type="number" id="sodium" name="sodium" step="any" placeholder="e.g. 137" required>
+                    </div>
+                    <div class="field">
+                        <label for="potassium">Potassium</label>
+                        <input type="number" id="potassium" name="potassium" step="any" placeholder="e.g. 4.5" required>
+                    </div>
+                    <div class="field">
+                        <label for="haemoglobin">Haemoglobin</label>
+                        <input type="number" id="haemoglobin" name="haemoglobin" step="any" placeholder="e.g. 15.4" required>
+                    </div>
+                    <div class="field">
+                        <label for="packed_cell_volume">Packed Cell Volume</label>
+                        <input type="number" id="packed_cell_volume" name="packed_cell_volume" step="any" placeholder="e.g. 44" required>
+                    </div>
+                    <div class="field">
+                        <label for="white_blood_cell_count">White Blood Cell Count</label>
+                        <input type="number" id="white_blood_cell_count" name="white_blood_cell_count" step="any" placeholder="e.g. 7800" required>
+                    </div>
+                    <div class="field">
+                        <label for="red_blood_cell_count">Red Blood Cell Count</label>
+                        <input type="number" id="red_blood_cell_count" name="red_blood_cell_count" step="any" placeholder="e.g. 5.2" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title"><span class="section-num">03</span> Cell & Bacteria Analysis</h2>
+                <div class="form-grid toggle-grid">
+                    <div class="field">
+                        <label for="red_blood_cells">Red Blood Cells</label>
+                        <select id="red_blood_cells" name="red_blood_cells" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="1">Normal</option>
+                            <option value="0">Abnormal</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="pus_cell">Pus Cell</label>
+                        <select id="pus_cell" name="pus_cell" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="1">Normal</option>
+                            <option value="0">Abnormal</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="pus_cell_clumps">Pus Cell Clumps</label>
+                        <select id="pus_cell_clumps" name="pus_cell_clumps" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="1">Present</option>
+                            <option value="0">Not Present</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="bacteria">Bacteria</label>
+                        <select id="bacteria" name="bacteria" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="1">Present</option>
+                            <option value="0">Not Present</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title"><span class="section-num">04</span> Medical History</h2>
+                <div class="form-grid toggle-grid">
+                    <div class="field">
+                        <label for="hypertension">Hypertension</label>
+                        <select id="hypertension" name="hypertension" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="diabetes_mellitus">Diabetes Mellitus</label>
+                        <select id="diabetes_mellitus" name="diabetes_mellitus" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="coronary_artery_disease">Coronary Artery Disease</label>
+                        <select id="coronary_artery_disease" name="coronary_artery_disease" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="appetite">Appetite</label>
+                        <select id="appetite" name="appetite" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="1">Good</option>
+                            <option value="0">Poor</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="peda_edema">Pedal Edema</label>
+                        <select id="peda_edema" name="peda_edema" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="aanemia">Anaemia</label>
+                        <select id="aanemia" name="aanemia" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-footer">
+                <button type="submit" class="submit-btn">
+                    <span>Run Prediction</span>
+                    <span class="btn-icon">→</span>
+                </button>
+            </div>
+
+        </form>
+
+        {% if error %}
+        <div class="result-card result-error">
+            <p class="result-label">Error</p>
+            <p class="result-message">{{ error }}</p>
+        </div>
+        {% endif %}
+
+        {% if result %}
+        <div class="result-card {% if result.prediction == 0 %}result-ckd{% else %}result-healthy{% endif %}">
+            <div class="result-header">
+                <span class="result-icon">{% if result.prediction == 0 %}⚠{% else %}✓{% endif %}</span>
+                <p class="result-label">Prediction Result</p>
+            </div>
+            <h2 class="result-title">{{ result.label }}</h2>
+            <div class="result-meta">
+                <div class="meta-item">
+                    <span class="meta-key">Confidence</span>
+                    <span class="meta-val">{{ "%.2f"|format(result.confidence * 100) }}%</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-key">Model Output</span>
+                    <span class="meta-val">Class {{ result.prediction }}</span>
+                </div>
+            </div>
+            <div class="confidence-bar">
+                <div class="confidence-fill" style="width: {{ result.confidence * 100 }}%"></div>
+            </div>
+        </div>
+        {% endif %}
+
+    </main>
+
+    <footer>
+        <p>HTAI — For research and educational use only. Not a substitute for clinical diagnosis.</p>
+    </footer>
+
+</body>
+</html>
