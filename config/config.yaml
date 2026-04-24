@@ -1,0 +1,33 @@
+data_ingestion:
+  bucket_name : "kidney_disease_bucket_neat_chain_464913"
+  bucket_file_name : "kidney_disease.csv"
+  train_ratio : 0.8
+
+data_processing:
+  categorical_columns:
+    - red_blood_cells
+    - pus_cell
+    - pus_cell_clumps
+    - bacteria
+    - hypertension
+    - diabetes_mellitus
+    - coronary_artery_disease
+    - appetite
+    - peda_edema
+    - aanemia      
+    - sugar        
+    - class
+  numerical_columns:
+    - age
+    - blood_pressure
+    - specific_gravity
+    - albumin
+    - blood_glucose_random
+    - blood_urea
+    - serum_creatinine
+    - sodium
+    - potassium
+    - hemoglobin
+    - packed_cell_volume
+    - white_blood_cell_count
+    - red_blood_cell_count

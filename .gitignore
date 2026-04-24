@@ -1,0 +1,17 @@
+infrastructure/.terraform
+infrastructure/.terraform.lock.hcl
+infrastructure/terraform.tfstate
+infrastructure/terraform.tfstate.backup
+infrastructure/kidney-disease-gcp-key.json
+*.tfvars
+*.tfvars.json
+.env
+venv
+config/__pycache__
+kidney_disease_mlops.egg-info
+logs
+src/__pycache__
+utils/__pycache__
+artifacts/raw
+artifacts/processed
+artifacts/models
