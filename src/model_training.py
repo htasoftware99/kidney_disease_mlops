@@ -1,5 +1,7 @@
 import os
 import joblib
+from dotenv import load_dotenv
+from comet_ml import Experiment
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
@@ -7,6 +9,8 @@ from src.logger import get_logger
 from src.custom_exception import CustomException
 from config.paths_config import *
 from utils.common_functions import load_data
+
+load_dotenv()
 
 logger = get_logger(__name__)
 
@@ -35,6 +39,13 @@ class ModelTraining:
         self.test_path = test_path
         self.model_output_path = model_output_path
 
+        self.experiment = Experiment(
+            api_key=os.getenv("COMET_API_KEY"),
+            project_name=os.getenv("COMET_PROJECT_NAME", "kidney-disease-mlops"),
+            workspace=os.getenv("COMET_WORKSPACE"),
+        )
+
+        logger.info("ModelTraining initialized with Comet ML experiment tracking")
 
     def load_and_split_data(self):
         try:
@@ -81,12 +92,13 @@ class ModelTraining:
             logger.info(f"Best parameters found: {best_params}")
             logger.info(f"Best CV score: {grid_search.best_score_:.4f}")
 
+            self.experiment.log_parameters(best_params)
+
             return best_model
 
         except Exception as e:
             logger.error(f"Error while training model: {e}")
             raise CustomException("Failed to train Random Forest model", e)
-
 
     def evaluate_model(self, model, X_test, y_test):
         try:
@@ -104,12 +116,16 @@ class ModelTraining:
             logger.info(f"Recall    : {recall:.4f}")
             logger.info(f"F1 Score  : {f1:.4f}")
 
-            return {
+            metrics = {
                 "accuracy":  accuracy,
                 "precision": precision,
                 "recall":    recall,
                 "f1":        f1,
             }
+
+            self.experiment.log_metrics(metrics)
+
+            return metrics
 
         except Exception as e:
             logger.error(f"Error while evaluating model: {e}")
@@ -122,6 +138,11 @@ class ModelTraining:
             joblib.dump(model, self.model_output_path)
             logger.info(f"Model saved to {self.model_output_path}")
 
+            self.experiment.log_model(
+                name="kidney-disease-random-forest",
+                file_or_folder=self.model_output_path,
+            )
+
         except Exception as e:
             logger.error(f"Error while saving model: {e}")
             raise CustomException("Failed to save model", e)
@@ -131,13 +152,16 @@ class ModelTraining:
         try:
             logger.info("Starting Model Training pipeline")
 
-            X_train, y_train, X_test, y_test = self.load_and_split_data()
+            with self.experiment.train():
+                X_train, y_train, X_test, y_test = self.load_and_split_data()
+                best_model = self.train_random_forest(X_train, y_train)
 
-            best_model = self.train_random_forest(X_train, y_train)
-
-            metrics = self.evaluate_model(best_model, X_test, y_test)
+            with self.experiment.test():
+                metrics = self.evaluate_model(best_model, X_test, y_test)
 
             self.save_model(best_model)
+
+            self.experiment.end()
 
             logger.info("Model Training pipeline completed successfully")
 
