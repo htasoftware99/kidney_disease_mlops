@@ -60,13 +60,11 @@ pipeline {
                         # 1. İmajı Build Et
                         docker build -t gcr.io/${GCP_PROJECT}/kidney-disease-mlops:latest .
                         
-                        # 2. Trivy'yi Kur (Eğer Jenkins konteynerine kalıcı olarak kurmadıysan)
-                        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.62.1
+                        # 2. Trivy ile İmajı Tara (Docker Container Kullanarak - ÇÖZÜM BURASI)
+                        docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+                            aquasec/trivy:0.62.1 image --severity HIGH,CRITICAL gcr.io/${GCP_PROJECT}/kidney-disease-mlops:latest || true
                         
-                        # 3. İmajı Trivy ile Tara (Sadece HIGH ve CRITICAL hataları gösterir)
-                        trivy image --severity HIGH,CRITICAL gcr.io/${GCP_PROJECT}/kidney-disease-mlops:latest || true
-                        
-                        # 4. Tarama başarılı olursa imajı GCP'ye Push Et
+                        # 3. Tarama başarılı olursa imajı GCP'ye Push Et
                         docker push gcr.io/${GCP_PROJECT}/kidney-disease-mlops:latest
                         '''
                     }
