@@ -82,7 +82,7 @@ pipeline {
                         gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
                         gcloud config set project ${GCP_PROJECT}
                         gcloud container clusters get-credentials ml-app-cluster --zone us-central1-a
-                        kubectl apply -f deployment.yaml
+                        kubectl apply -f deployment.yml
                         '''
                     }
                 }
