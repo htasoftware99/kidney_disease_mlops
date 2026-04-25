@@ -2,6 +2,12 @@
 
 An end-to-end MLOps pipeline for classifying Chronic Kidney Disease (CKD) using clinical data. This project demonstrates the integration of machine learning development with production-ready DevOps practices, including infrastructure as code, containerization, and automated CI/CD.
 
+## 🏗️ System Architecture
+
+<p align="center">
+  <img src="structure.png" width="700"/>
+</p>
+
 ## 🚀 Project Overview
 
 The goal of this project is to provide a robust system for predicting the likelihood of chronic kidney disease based on patient clinical parameters. It covers the entire lifecycle from data ingestion to cloud deployment.
