@@ -1,7 +1,6 @@
-# 1. GKE Cluster Tanımı
 resource "google_container_cluster" "primary" {
   name     = "ml-app-cluster"
-  location = "us-central1-a" # DEĞİŞİKLİK: Sadece 'a' zone'unu seçerek 3 yerine 1 makine açılmasını sağlıyoruz
+  location = "us-central1-a" 
 
   network    = "default"
   subnetwork = "default"
@@ -16,10 +15,9 @@ resource "google_container_cluster" "primary" {
   deletion_protection = false
 }
 
-# 2. Özel Node Pool Tanımı
 resource "google_container_node_pool" "primary_nodes" {
   name       = "ml-app-node-pool"
-  location   = "us-central1-a" # DEĞİŞİKLİK: Burası da cluster ile aynı zone olmalı
+  location   = "us-central1-a" 
   cluster    = google_container_cluster.primary.name
   
   node_count = 1 
@@ -27,8 +25,7 @@ resource "google_container_node_pool" "primary_nodes" {
   node_config {
     preemptible  = false
     machine_type = "e2-medium"
-    
-    # KOTA ÇÖZÜMÜ: Disk tipini standart yapıp boyutunu 50 GB'a düşürdük
+
     disk_size_gb = 50
     disk_type    = "pd-standard" 
 

@@ -57,14 +57,14 @@ pipeline {
                         gcloud config set project ${GCP_PROJECT}
                         gcloud auth configure-docker --quiet
                         
-                        # 1. İmajı Build Et
+                        # 1. build the Docker image
                         docker build -t gcr.io/${GCP_PROJECT}/kidney-disease-mlops:latest .
                         
-                        # 2. Trivy ile İmajı Tara (Docker Container Kullanarak - ÇÖZÜM BURASI)
+                        # 2. Scan the image with Trivy, allowing the build to proceed even if vulnerabilities are found
                         docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
                             aquasec/trivy:0.62.1 image --severity HIGH,CRITICAL gcr.io/${GCP_PROJECT}/kidney-disease-mlops:latest || true
                         
-                        # 3. Tarama başarılı olursa imajı GCP'ye Push Et
+                        # 3. Scan successful, push the image to GCP
                         docker push gcr.io/${GCP_PROJECT}/kidney-disease-mlops:latest
                         '''
                     }
