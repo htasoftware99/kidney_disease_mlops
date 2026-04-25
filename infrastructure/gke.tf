@@ -1,42 +1,37 @@
 # 1. GKE Cluster Tanımı
 resource "google_container_cluster" "primary" {
   name     = "ml-app-cluster"
-  location = "us-central1" # Görseldeki Region seçimi
+  location = "us-central1-a" # DEĞİŞİKLİK: Sadece 'a' zone'unu seçerek 3 yerine 1 makine açılmasını sağlıyoruz
 
-  # Görseldeki varsayılan network ayarları
   network    = "default"
   subnetwork = "default"
 
-  # Sektörel En İyi Pratik (Best Practice): 
-  # Varsayılan node pool'u silip, aşağıda kendi özel node pool'umuzu tanımlıyoruz.
   remove_default_node_pool = true
   initial_node_count       = 1
 
-  # Görseldeki "Advanced networking options" -> "Cluster default Pod address range" ayarı
   ip_allocation_policy {
     cluster_ipv4_cidr_block = "/17"
   }
 
-  # Yanlışlıkla silinmelere karşı koruma (Geliştirme aşamasında false yapılabilir)
   deletion_protection = false
 }
 
 # 2. Özel Node Pool Tanımı
 resource "google_container_node_pool" "primary_nodes" {
   name       = "ml-app-node-pool"
-  location   = "us-central1"
+  location   = "us-central1-a" # DEĞİŞİKLİK: Burası da cluster ile aynı zone olmalı
   cluster    = google_container_cluster.primary.name
   
-  # us-central1 bölgesindeki her bir zone için oluşturulacak node sayısı 
-  # (Bölgesel cluster olduğu için genelde 3 zone x 1 = 3 makine oluşur)
   node_count = 1 
 
   node_config {
-    preemptible  = false       # Production için false kalmalı.
-    machine_type = "e2-medium" # MLOps iş yüküne göre ileride "e2-standard-4" vb. olarak güncelleyebilirsin.
+    preemptible  = false
+    machine_type = "e2-medium"
+    
+    # KOTA ÇÖZÜMÜ: Disk tipini standart yapıp boyutunu 50 GB'a düşürdük
+    disk_size_gb = 50
+    disk_type    = "pd-standard" 
 
-    # DİKKAT: iam.tf dosyasında oluşturduğun Service Account'u Node'lara veriyoruz!
-    # Bu sayede Kubernetes içindeki Pod'lar senin Storage Bucket'larına doğrudan erişebilir.
     service_account = google_service_account.kidney_disease.email
     
     oauth_scopes = [

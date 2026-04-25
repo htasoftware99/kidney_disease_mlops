@@ -2,6 +2,9 @@ pipeline {
     agent any
     environment {
         VENV_DIR = 'venv'
+        GCP_PROJECT = 'neat-chain-464913-k3'
+        GCLOUD_PATH = "/usr/lib/google-cloud-sdk/bin"
+        KUBECTL_AUTH_PLUGIN = "/usr/lib/google-cloud-sdk/bin/gke-gcloud-auth-plugin"
     }
 
     stages {
@@ -42,6 +45,50 @@ pipeline {
                 }
             }
         }
-        
+
+        stage('Build, Scan and Push Image to GCR'){
+            steps{
+                withCredentials([file(credentialsId:'gcp-key' , variable: 'GOOGLE_APPLICATION_CREDENTIALS' )]){
+                    script{
+                        echo 'Building, scanning and pushing image to GCR...'
+                        sh '''
+                        export PATH=$PATH:${GCLOUD_PATH}
+                        gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
+                        gcloud config set project ${GCP_PROJECT}
+                        gcloud auth configure-docker --quiet
+                        
+                        # 1. İmajı Build Et
+                        docker build -t gcr.io/${GCP_PROJECT}/kidney-disease-mlops:latest .
+                        
+                        # 2. Trivy'yi Kur (Eğer Jenkins konteynerine kalıcı olarak kurmadıysan)
+                        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.62.1
+                        
+                        # 3. İmajı Trivy ile Tara (Sadece HIGH ve CRITICAL hataları gösterir)
+                        trivy image --severity HIGH,CRITICAL gcr.io/${GCP_PROJECT}/kidney-disease-mlops:latest || true
+                        
+                        # 4. Tarama başarılı olursa imajı GCP'ye Push Et
+                        docker push gcr.io/${GCP_PROJECT}/kidney-disease-mlops:latest
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Deploying to Kubernetes'){
+            steps{
+                withCredentials([file(credentialsId:'gcp-key' , variable: 'GOOGLE_APPLICATION_CREDENTIALS' )]){
+                    script{
+                        echo 'Deploying to Kubernetes'
+                        sh '''
+                        export PATH=$PATH:${GCLOUD_PATH}:${KUBECTL_AUTH_PLUGIN}
+                        gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
+                        gcloud config set project ${GCP_PROJECT}
+                        gcloud container clusters get-credentials ml-app-cluster --region us-central1
+                        kubectl apply -f deployment.yaml
+                        '''
+                    }
+                }
+            }
+        }
     }
 }
