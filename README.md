@@ -83,13 +83,7 @@ terraform plan
 terraform apply
 ```
 
-### Kubernetes Deployment
-Once the cluster is ready and the Docker image is pushed to a registry:
-```bash
-kubectl apply -f deployment.yml
-```
-
 ---
 
 ## 📊 Experiment Tracking
-Model performance and metadata are logged to **Comet ML**. Ensure you have your `COMET_API_KEY` configured in your environment to track new runs.
+Model performance and metadata are logged to **Comet ML**. Ensure you have your `COMET_API_KEY`, `COMET_PROJECT_NAME`, `COMET_WORKSPACE` configured in your environment to track new runs.
