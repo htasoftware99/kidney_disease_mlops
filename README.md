@@ -19,7 +19,7 @@ The goal of this project is to provide a robust system for predicting the likeli
 
 ## 🛠 Tech Stack
 
-- **Language**: Python 3.x
+- **Language**: Python 3.10+
 - **ML Frameworks**: Scikit-Learn, XGBoost, Pandas, Numpy
 - **Web Framework**: Flask
 - **DevOps/MLOps**:
@@ -31,26 +31,6 @@ The goal of this project is to provide a robust system for predicting the likeli
     - **Trivy**: Vulnerability scanning for containers.
     - **Comet ML**: Experiment tracking.
 - **Cloud Platform**: Google Cloud Platform (GCP)
-
----
-
-## 📁 Project Structure
-
-```text
-├── artifacts/              # DVC-tracked data and models
-├── config/                 # YAML and Python configuration files
-├── infrastructure/         # Terraform (IaC) files for GCP/GKE
-├── notebooks/              # Jupyter notebooks for EDA and trials
-├── pipeline/               # Training and Prediction pipeline scripts
-├── src/                    # Core source code (processing, training, etc.)
-├── static/ & templates/    # Frontend files for the Flask app
-├── utils/                  # Utility and common functions
-├── app.py                  # Flask application entry point
-├── Dockerfile              # Docker image definition
-├── Jenkinsfile             # Jenkins pipeline definition
-├── deployment.yml          # Kubernetes deployment configuration
-└── requirements.txt        # Project dependencies
-```
 
 ---
 
@@ -113,9 +93,3 @@ kubectl apply -f deployment.yml
 
 ## 📊 Experiment Tracking
 Model performance and metadata are logged to **Comet ML**. Ensure you have your `COMET_API_KEY` configured in your environment to track new runs.
-
----
-
-## 📧 Contact
-**Author**: htai
-**Project Link**: [https://github.com/your-username/kidney_disease_mlops](https://github.com/your-username/kidney_disease_mlops)
