@@ -16,7 +16,7 @@ The goal of this project is to provide a robust system for predicting the likeli
 - **Data & Model Versioning**: Managed via **DVC (Data Version Control)** with Google Cloud Storage (GCS) as remote storage.
 - **Experiment Tracking**: Integrated with **Comet ML** to log metrics, hyperparameters, and model performance.
 - **Infrastructure as Code (IaC)**: **Terraform** used to provision Google Kubernetes Engine (GKE) and IAM roles on GCP.
-- **CI/CD Pipeline**: Automated testing, building, security scanning with **Trivy**, and deployment using **Jenkins** and **GitHub Actions**.
+- **CI/CD Pipeline**: Automated testing, building, security scanning with **Trivy**, and deployment using **Jenkins**.
 - **Security Scanning**: Integrated **Trivy** to scan Docker images for vulnerabilities (High/Critical) before pushing to the container registry.
 - **Deployment**: Scalable deployment using **Docker** and **Kubernetes (GKE)**.
 - **Web Interface**: A **Flask**-based dashboard for real-time patient diagnosis.
